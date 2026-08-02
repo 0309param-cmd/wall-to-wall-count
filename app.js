@@ -129,11 +129,31 @@ function recalcTotal() {
   $(id).addEventListener("input", recalcTotal)
 );
 
+/* ---------------- Pallet ID validation ---------------- */
+const PALLET_PREFIX = "HE";
+function isValidPalletId(id) {
+  return id.trim().toUpperCase().startsWith(PALLET_PREFIX);
+}
+$("palletId").addEventListener("input", () => $("palletId").classList.remove("invalid"));
+$("palletId").addEventListener("blur", () => {
+  const val = $("palletId").value.trim();
+  if (val && !isValidPalletId(val)) {
+    $("palletId").classList.add("invalid");
+    showToast(`Pallet ID must start with "${PALLET_PREFIX}"`, true);
+  } else {
+    $("palletId").classList.remove("invalid");
+  }
+});
+
 /* ---------------- Add line ---------------- */
 $("addLineBtn").addEventListener("click", () => {
   const palletId = $("palletId").value.trim();
   const locationId = $("locationId").value.trim();
   if (!palletId) return showToast("Scan the Pallet ID first", true);
+  if (!isValidPalletId(palletId)) {
+    $("palletId").classList.add("invalid");
+    return showToast(`Pallet ID must start with "${PALLET_PREFIX}" — check the scan`, true);
+  }
   if (!locationId) return showToast("Scan the Location first", true);
   if (!selectedSku) return showToast("Select a SKU from the list", true);
 
