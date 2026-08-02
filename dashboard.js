@@ -11,6 +11,7 @@ const COUNTS_PATH = "counts";
 const USER_EMAIL_DOMAIN = "@warehouse.local"; // must match app.js
 
 let dashboardRows = [];
+let isAdmin = false;
 
 function $(id) { return document.getElementById(id); }
 
@@ -47,11 +48,13 @@ $("loginBtn").addEventListener("click", async () => {
 
 $("logoutBtn").addEventListener("click", () => auth.signOut());
 
-auth.onAuthStateChanged((user) => {
+auth.onAuthStateChanged(async (user) => {
   if (user) {
     $("loginScreen").classList.add("hidden");
     $("appShell").classList.remove("hidden");
     $("userChip").textContent = user.email.replace(USER_EMAIL_DOMAIN, "");
+    const adminSnap = await db.ref("admins/" + user.uid).once("value");
+    isAdmin = adminSnap.val() === true;
     attachDashboardListener();
   } else {
     $("appShell").classList.add("hidden");
@@ -66,7 +69,7 @@ function attachDashboardListener() {
     .limitToLast(500)
     .on("value", (snap) => {
       const rows = [];
-      snap.forEach((child) => { rows.push(child.val()); });
+      snap.forEach((child) => { rows.push({ ...child.val(), _key: child.key }); });
       dashboardRows = rows.reverse(); // newest first
       renderDashboard();
     });
@@ -91,7 +94,25 @@ function renderDashboard() {
       <td class="mono">${r.palletId}</td><td class="mono">${r.locationId}</td>
       <td>${r.qtyPerBox}</td><td>${r.fullBox}</td><td>${r.looseBox}</td>
       <td>${r.totalQty}</td><td>${r.countedBy}</td><td>${fmtDate(r.timestamp)}</td>
+      <td>${isAdmin ? `<button class="remove-row" data-key="${r._key}">✕</button>` : ""}</td>
     </tr>`).join("");
+
+  if (isAdmin) {
+    document.querySelectorAll("#dashTable .remove-row").forEach((btn) => {
+      btn.addEventListener("click", () => deleteRow(btn.dataset.key));
+    });
+  }
+}
+
+async function deleteRow(key) {
+  if (!confirm("Delete this record permanently? This cannot be undone.")) return;
+  try {
+    await db.ref(COUNTS_PATH + "/" + key).remove();
+    showToast("Record deleted");
+  } catch (e) {
+    console.error(e);
+    showToast("Delete failed — admin access required", true);
+  }
 }
 ["fltPallet", "fltLocation", "fltSku", "fltUser"].forEach((id) =>
   $(id).addEventListener("input", renderDashboard)
