@@ -1,0 +1,16 @@
+{
+  "rules": {
+    "counts": {
+      ".read": "auth != null",
+      ".write": "auth != null",
+      ".indexOn": ["palletId", "locationId", "timestamp"],
+      "$countId": {
+        ".validate": "!data.exists()"
+      }
+    },
+    "$other": {
+      ".read": false,
+      ".write": false
+    }
+  }
+}

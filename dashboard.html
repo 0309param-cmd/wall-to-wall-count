@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Wall-to-Wall Count — Dashboard</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ===================== LOGIN SCREEN ===================== -->
+  <section id="loginScreen" class="screen">
+    <div class="login-card">
+      <div class="brand">
+        <span class="brand-mark">▮▮▯▮</span>
+        <h1>Count Dashboard</h1>
+      </div>
+      <p class="muted">Supervisor sign-in.</p>
+      <label class="field">
+        <span>User Name</span>
+        <input id="loginEmail" type="text" autocomplete="username" placeholder="e.g. supervisor1" />
+      </label>
+      <label class="field">
+        <span>Password</span>
+        <input id="loginPassword" type="password" autocomplete="current-password" placeholder="••••••••" />
+      </label>
+      <button id="loginBtn" class="btn btn-primary btn-block">Sign In</button>
+      <p id="loginError" class="error-text"></p>
+    </div>
+  </section>
+
+  <!-- ===================== DASHBOARD ===================== -->
+  <div id="appShell" class="hidden">
+    <header class="topbar">
+      <div class="topbar-title">Wall-to-Wall Count — Live Dashboard</div>
+      <div class="topbar-user">
+        <span id="userChip" class="chip"></span>
+        <button id="logoutBtn" class="btn-ghost">Log out</button>
+      </div>
+    </header>
+
+    <section class="tab-panel" style="padding-bottom:24px;">
+      <div class="panel">
+        <div class="panel-header">
+          <h2>Live Submissions</h2>
+          <button id="exportBtn" class="btn btn-secondary">Export to Excel</button>
+        </div>
+        <div class="filter-row">
+          <input id="fltPallet" class="mono" type="text" placeholder="Filter Pallet ID" />
+          <input id="fltLocation" class="mono" type="text" placeholder="Filter Location" />
+          <input id="fltSku" class="mono" type="text" placeholder="Filter SKU" />
+          <input id="fltUser" type="text" placeholder="Filter Counted By" />
+        </div>
+        <div class="table-wrap tall">
+          <table id="dashTable">
+            <thead>
+              <tr>
+                <th>SKU</th><th>Description</th><th>Pallet</th><th>Location</th>
+                <th>Qty/Box</th><th>Full</th><th>Loose</th><th>Total</th><th>By</th><th>When</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+  <script src="firebase-config.js"></script>
+  <script src="dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>SKU Master Converter</title>
+<style>
+  body{font-family:-apple-system,Segoe UI,Roboto,sans-serif;background:#14171C;color:#F3F4F6;
+       max-width:640px;margin:40px auto;padding:0 20px;}
+  h1{font-size:20px;}
+  p{color:#9AA1AC;line-height:1.5;}
+  input[type=file]{margin:16px 0;padding:12px;background:#1E2229;border:1px solid #2A2F38;border-radius:8px;color:#F3F4F6;width:100%;}
+  button{background:#F5A623;color:#1A1300;border:none;border-radius:8px;padding:12px 20px;font-weight:600;cursor:pointer;font-size:15px;}
+  button:disabled{opacity:.4;cursor:not-allowed;}
+  pre{background:#1E2229;border:1px solid #2A2F38;border-radius:8px;padding:12px;max-height:300px;overflow:auto;font-size:12px;}
+  .ok{color:#3DDC84;}
+  .err{color:#FF5C5C;}
+  code{background:#1E2229;padding:2px 6px;border-radius:4px;}
+</style>
+</head>
+<body>
+  <h1>SKU Master → sku-master.json Converter</h1>
+  <p>
+    In Excel, from your SKU master sheet, save/export as <b>CSV</b> with exactly these
+    column headers in row 1: <code>code</code>, <code>description</code>, <code>qtyPerBox</code>.
+    Then upload that CSV here. It will generate the <code>sku-master.json</code> file —
+    download it and replace the placeholder file of the same name in your project folder,
+    then redeploy (see README-SETUP.md).
+  </p>
+  <input type="file" id="fileInput" accept=".csv" />
+  <div id="status"></div>
+  <button id="downloadBtn" disabled>Download sku-master.json</button>
+  <h3>Preview (first 5 rows)</h3>
+  <pre id="preview">—</pre>
+
+  <script>
+    let generatedJson = null;
+
+    document.getElementById("fileInput").addEventListener("change", (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const rows = parseCsv(reader.result);
+          generatedJson = JSON.stringify(rows, null, 2);
+          document.getElementById("preview").textContent = JSON.stringify(rows.slice(0, 5), null, 2);
+          document.getElementById("status").innerHTML =
+            `<p class="ok">Parsed ${rows.length} SKUs successfully.</p>`;
+          document.getElementById("downloadBtn").disabled = false;
+        } catch (err) {
+          document.getElementById("status").innerHTML = `<p class="err">${err.message}</p>`;
+          document.getElementById("downloadBtn").disabled = true;
+        }
+      };
+      reader.readAsText(file);
+    });
+
+    function parseCsv(text) {
+      const lines = text.split(/\r?\n/).filter((l) => l.trim().length);
+      if (!lines.length) throw new Error("File is empty.");
+      const headers = lines[0].split(",").map((h) => h.trim().toLowerCase());
+      const required = ["code", "description", "qtyperbox"];
+      for (const r of required) {
+        if (!headers.includes(r)) {
+          throw new Error(`Missing required column "${r}". Found columns: ${headers.join(", ")}`);
+        }
+      }
+      const idx = {
+        code: headers.indexOf("code"),
+        description: headers.indexOf("description"),
+        qtyPerBox: headers.indexOf("qtyperbox"),
+      };
+      return lines.slice(1).map((line) => {
+        const cols = line.split(",");
+        return {
+          code: (cols[idx.code] || "").trim(),
+          description: (cols[idx.description] || "").trim(),
+          qtyPerBox: parseFloat(cols[idx.qtyPerBox]) || 0,
+        };
+      }).filter((r) => r.code);
+    }
+
+    document.getElementById("downloadBtn").addEventListener("click", () => {
+      if (!generatedJson) return;
+      const blob = new Blob([generatedJson], { type: "application/json" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "sku-master.json";
+      a.click();
+    });
+  </script>
+</body>
+</html>

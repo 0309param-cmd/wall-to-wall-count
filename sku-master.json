@@ -1,0 +1,582 @@
+[
+  {
+    "code": "009.060-211",
+    "description": "AFS-GDL-CONTROL UNIT 12V 5DC",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "358.003-671",
+    "description": "ANTIFREEZE 8MX",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "358.003-701",
+    "description": "ANTIFREEZE 8MX",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "996.139-521",
+    "description": "BACKUP ALARM 3SL",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "355.109-921",
+    "description": "BRAKE DISC 8DD",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "355.020-251",
+    "description": "\"BRAKE PAD SET",
+    "qtyPerBox": 0
+  },
+  {
+    "code": "355.024-791",
+    "description": "\"BRAKE PAD SET",
+    "qtyPerBox": 0
+  },
+  {
+    "code": "355.012-581",
+    "description": "\"BRAKE PAD SET",
+    "qtyPerBox": 0
+  },
+  {
+    "code": "358.172-361",
+    "description": "BRAKE SHOE SET 8DB",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "358.133-071",
+    "description": "COOL MAKER FULLY SYNTH 20W40 SN 50L 9CO",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "358.003-484",
+    "description": "COOLANT PREMIUM CONC 1:3 210 LTR G 8MX",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "358.052-171",
+    "description": "DASHCAM CAPTURE 2.0 X 8XX",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "358.052-121",
+    "description": "DASHCAM DR 760 2 CHANNEL WIFI SCREE 8XX",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "358.052-151",
+    "description": "DASHCAM VISION 1.0 8XX",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "010.458-801",
+    "description": "DAY RUNNING LIGHT (5TH ECE)LAMP SET 2PT",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "358.133-341",
+    "description": "ENGINE OIL 9CO",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "358.133-361",
+    "description": "ENGINE OIL 9CO",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "358.203-431",
+    "description": "ENGINE OIL 9CO",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "358.128-131",
+    "description": "ENGINE OIL Premium 15W40 CI-4+ 15L 9CO",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "358.059-871",
+    "description": "ENGINE OIL PREMIUM PRO 20W40 50 L 9CO",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "358.133-541",
+    "description": "ENGINE OIL SAFE GUARD P 15W40 210L 9CO",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "358.128-301",
+    "description": "ENGINE OIL SEMI-SYNTH 10W40 1L 9CO",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "358.097-081",
+    "description": "ENGINE OIL SEMI-SYNTHETIC 5W30 SL/CF 210L 9CO",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "358.133-211",
+    "description": "ENGINE OIL UTTO 20L 9CO",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "358.133-511",
+    "description": "ENGINE OIL UTTO 26L 9CO",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "358.304-241",
+    "description": "FUEL FEED UNIT 8TF",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "358.306-971",
+    "description": "FUEL FEED UNIT 8TF",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "358.306-111",
+    "description": "FUEL PUMP��������������������������� 8TF",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "358.133-671",
+    "description": "GEAR OIL 80W90 20L 9CO",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "358.204-261",
+    "description": "GEAR OIL 80W90 GL-4 26L 9CO",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "358.133-591",
+    "description": "GEAR OIL 85W140 12L 9CO",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "358.133-681",
+    "description": "GEAR OIL 85W140 20L 9CO",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "003.959-031",
+    "description": "GLOW STARTING SWITCH 6JB",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "015.318-041",
+    "description": "HEADLAMP DE-LES A/F MD12/24 1LL",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "009.998-011",
+    "description": "HEADLAMP DE-LES A/F MG12 1LL",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "007.186-061",
+    "description": "HEADLAMP DE-ZNW MG12 1NL",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "007.186-021",
+    "description": "HEADLAMP DE-ZNWH MGS12 1NL",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "002.395-031",
+    "description": "HEADLAMP ESH FA 1A6",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "329.336-001",
+    "description": "HEADLAMP FF-ZFPO 0/180GR BLACK 1F8",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "009.295-801",
+    "description": "HEADLAMP FF-ZNW CORNERING-LIGHT SET 1N0",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "008.582-002",
+    "description": "HEADLAMP FF-ZNW MG12 1N0",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "008.582-011",
+    "description": "HEADLAMP FF-ZNW MG24 1N0",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "005.750-641",
+    "description": "HEADLAMP H ZN MK MG12 1N4",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "008.191-021",
+    "description": "HEADLAMP INSERT FF-FPO MG24 1K0",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "012.206-001",
+    "description": "HEADLAMP ZF 0/180GR SW MD12/24 1F0",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "009.028-021",
+    "description": "HID LAMP D1S 35W OSRAM 8GS",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "004.811-041",
+    "description": "HORN 2FACH 12V 3CB",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "329.321-001",
+    "description": "HORN TESTER 9XX",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "358.133-771",
+    "description": "HYDRAULIC OIL 9CO",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "358.133-381",
+    "description": "HYDRAULIC OIL 20L 9CO",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "358.133-391",
+    "description": "HYDRAULIC OIL 210L 9CO",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "358.133-611",
+    "description": "HYDRAULIC OIL 26L 9CO",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "358.133-751",
+    "description": "Hydraulic Oil AW46- 20L",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "001.389-101",
+    "description": "LAMP K BLACK 2KA",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "959.590-207",
+    "description": "LAMP PO WHITE RECESS MD12/24 2PF",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "959.011-301",
+    "description": "LAMP RDI 83MM RND MD24 2BA",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "009.001-401",
+    "description": "LAMP SB ECE (SBBL SAE) MD12 2SB",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "010.563-211",
+    "description": "LAMP SBBLZR SMLR LH MG/MD12 2SK",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "012.379-421",
+    "description": "LAMP SBBLZR SMLR RH MG/MD12 2SK",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "329.343-001",
+    "description": "LED-MODUL LED-12V KIT 2PT",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "013.680-071",
+    "description": "PACKAGED ULTRASONIC LEVEL SENSOR 6PR",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "013.680-161",
+    "description": "PACKAGED ULTRASONIC LEVEL SENSOR 6PR",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "013.680-171",
+    "description": "PACKAGED ULTRASONIC LEVEL SENSOR 6PR",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "001.946-051",
+    "description": "PLUG SOCKET 8JB",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "004.123-001",
+    "description": "PLUG SOCKET 2POL 8JB",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "996.210-011",
+    "description": "PROJ-LAMP SAR 0GR MD10-80 LT SL60 1G0",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "358.435-341",
+    "description": "Radiator A STAR",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "358.435-591",
+    "description": "Radiator ACE Mega",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "358.435-281",
+    "description": "Radiator ALTO / WAGON -R K 10",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "358.435-301",
+    "description": "Radiator ALTO 800 NEW",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "358.435-291",
+    "description": "Radiator ALTO LX / VX / CNG / WAGON R/EECO",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "358.435-031",
+    "description": "Radiator AMAZE DSL NEW / JAZZ DSL NEW",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "358.435-071",
+    "description": "Radiator AMAZE PETROL / BRIO PTL",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "358.435-331",
+    "description": "Radiator BALENO DSL T3",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "358.435-331",
+    "description": "Radiator BALENO DSL T3",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "358.435-521",
+    "description": "Radiator Bolero Maxi Truck BS6",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "358.435-221",
+    "description": "Radiator BOLERO MAXI TRUCK PLUS",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "358.435-551",
+    "description": "Radiator Bolero Plus BS6/Camper 2.5L",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "358.435-251",
+    "description": "Radiator BOLERO POWER PLUS",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "358.435-491",
+    "description": "Radiator Bolero(NON AC) 131With Frame",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "358.435-081",
+    "description": "Radiator CRETA DSL MT (16mm)",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "358.435-171",
+    "description": "Radiator EON",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "358.435-041",
+    "description": "Radiator HONDA T-7 / I DTECH PTL",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "358.435-151",
+    "description": "Radiator I 10 GRAND PTL",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "358.435-101",
+    "description": "Radiator I 20 DIESEL / FLUDIC DSL / I 20 ELITE DSL",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "358.435-131",
+    "description": "Radiator I10 ( 1.1 IRDE / ERA MAGNA)",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "358.435-121",
+    "description": "Radiator I10 ( 1.2 KAPPA / SPORTZ / MAGNA)",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "358.435-141",
+    "description": "Radiator I10 GRAND DIESEL",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "358.435-461",
+    "description": "Radiator INNOVA CRYSTA NEW",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "358.435-161",
+    "description": "Radiator SANTRO XING",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "358.435-541",
+    "description": "Radiator Scorpio S10",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "358.435-321",
+    "description": "Radiator SWIFT DSL TYPE III - 2017",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "358.435-581",
+    "description": "Radiator Swift DSLNew/Dzire/K10/Ertiga-22mm",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "358.435-261",
+    "description": "Radiator SWIFT D'ZIRE DIESEL",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "358.435-271",
+    "description": "Radiator SWIFT PETROL / SWIFT D'ZIRE PETROL",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "358.435-371",
+    "description": "Radiator SWIFT PTL TYPE III - 2012 TO 2017",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "358.435-351",
+    "description": "Radiator WAGON R K12 / IGNIS K12",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "358.435-181",
+    "description": "Radiator XUV 500",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "358.435-211",
+    "description": "Radiator XYLO",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "358.203-651",
+    "description": "SAFE GUARD 15W40 PRO CF-4 7.5L 9CO",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "358.203-641",
+    "description": "SAFE GUARD 15W40 PRO CF-4 7L 9CO",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "358.128-861",
+    "description": "Safe Guard Premium 15w40 CF-4 10L 9CO",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "358.128-701",
+    "description": "Safe Guard Premium 15w40 CF-4 15L 9CO",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "329.626-151",
+    "description": "SWITCH ON-OFF 6EH",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "905.510-031",
+    "description": "TERMINAL.BULK PACK EYE 5.0MM 8KW",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "905.499-001",
+    "description": "TERMINAL.BULK PACK MALE 6.3MM 8KW",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "905.496-021",
+    "description": "TERMINAL.BULK PACK P/O F 6.3MM 8KW",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "358.128-871",
+    "description": "TRANSMISSION OIL 9CO",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "358.128-881",
+    "description": "TRANSMISSION OIL 9CO",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "358.202-191",
+    "description": "VOILA 5w30 Fully synthetic SM/CH 210L 9CO",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "011.590-701",
+    "description": "\"VOLTAGE STABILISER",
+    "qtyPerBox": 0
+  },
+  {
+    "code": "996.176-041",
+    "description": "WORK LAMP NA 0GR MG12H9 M70 1G0",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "996.176-051",
+    "description": "WORK LAMP WA 0GR MG12H9 M70 1G0",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "012.722-001",
+    "description": "WORKLAMP NA 0GR MD12 LT AP700RD 1G4",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "011.722-001",
+    "description": "WORKLAMP NA 0GR MD12-24 LT AP1200RD 1G4",
+    "qtyPerBox": 1
+  },
+  {
+    "code": "013.722-001",
+    "description": "WORKLAMP NA 0GR MD12-24 LT AP1800RD 1G4",
+    "qtyPerBox": 1
+  }
+]

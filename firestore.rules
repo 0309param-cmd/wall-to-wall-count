@@ -1,0 +1,4 @@
+// DEPRECATED — no longer used.
+// This project switched from Firestore to Realtime Database
+// (Firestore now requires a linked billing account even for free-tier
+// usage; Realtime Database does not). See database.rules.json instead.
