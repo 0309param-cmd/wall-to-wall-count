@@ -1,11 +1,14 @@
 {
   "rules": {
+    "admins": {
+      ".read": "auth != null",
+      ".write": false
+    },
     "counts": {
       ".read": "auth != null",
-      ".write": "auth != null",
       ".indexOn": ["palletId", "locationId", "timestamp"],
       "$countId": {
-        ".validate": "!data.exists()"
+        ".write": "auth != null && (!data.exists() || root.child('admins').child(auth.uid).val() === true)"
       }
     },
     "$other": {
