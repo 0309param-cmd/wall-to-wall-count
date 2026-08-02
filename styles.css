@@ -190,9 +190,9 @@ td{padding:9px 8px;border-top:1px solid var(--border);white-space:nowrap;}
   .tab-panel{max-width:720px;margin:0 auto;}
 }
 
-/* Dashboard-specific: wider layout, wrapping text instead of one long scrolling row */
-.tab-panel.dashboard-wide{max-width:1200px;}
-#dashTable{table-layout:fixed;width:100%;}
-#dashTable th,#dashTable td{white-space:normal;word-break:break-word;font-size:12px;}
-#dashTable th:nth-child(2),#dashTable td:nth-child(2){width:18%;}
-#dashTable th:last-child,#dashTable td:last-child{width:32px;text-align:center;}
+/* Dashboard-specific: wider layout so more columns fit without ugly wrapping */
+.tab-panel.dashboard-wide{max-width:1300px;}
+#dashTable{table-layout:auto;width:100%;}
+#dashTable th,#dashTable td{white-space:nowrap;font-size:12px;padding:8px 6px;}
+#dashTable td:nth-child(2){max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+#dashTable th:last-child,#dashTable td:last-child{width:28px;text-align:center;white-space:nowrap;}
