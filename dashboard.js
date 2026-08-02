@@ -66,7 +66,7 @@ function attachDashboardListener() {
     .limitToLast(500)
     .on("value", (snap) => {
       const rows = [];
-      snap.forEach((child) => rows.push(child.val()));
+      snap.forEach((child) => { rows.push(child.val()); });
       dashboardRows = rows.reverse(); // newest first
       renderDashboard();
     });
