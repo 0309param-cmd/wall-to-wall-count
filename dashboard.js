@@ -29,6 +29,12 @@ function fmtDate(ts) {
   return new Date(ts).toLocaleString();
 }
 
+function escapeHtml(str) {
+  return String(str ?? "").replace(/[&<>"']/g, (c) => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+  }[c]));
+}
+
 /* ---------------- Auth ---------------- */
 $("loginBtn").addEventListener("click", async () => {
   const username = $("loginEmail").value.trim();
@@ -63,15 +69,20 @@ auth.onAuthStateChanged(async (user) => {
 });
 
 /* ---------------- Live data ---------------- */
+const DASHBOARD_LIMIT = 3000;
+
 function attachDashboardListener() {
   db.ref(COUNTS_PATH)
     .orderByChild("timestamp")
-    .limitToLast(500)
+    .limitToLast(DASHBOARD_LIMIT)
     .on("value", (snap) => {
       const rows = [];
       snap.forEach((child) => { rows.push({ ...child.val(), _key: child.key }); });
       dashboardRows = rows.reverse(); // newest first
       renderDashboard();
+      if (dashboardRows.length >= DASHBOARD_LIMIT) {
+        showToast(`Showing latest ${DASHBOARD_LIMIT} records — older ones exist but aren't shown live. Use Export or filters to narrow down.`, true);
+      }
     });
 }
 
@@ -90,11 +101,11 @@ function renderDashboard() {
 
   document.querySelector("#dashTable tbody").innerHTML = filtered.map((r) => `
     <tr>
-      <td class="mono">${r.skuCode}</td><td>${r.description}</td>
-      <td class="mono">${r.palletId}</td><td class="mono">${r.locationId}</td>
+      <td class="mono">${escapeHtml(r.skuCode)}</td><td>${escapeHtml(r.description)}</td>
+      <td class="mono">${escapeHtml(r.palletId)}</td><td class="mono">${escapeHtml(r.locationId)}</td>
       <td>${r.qtyPerBox}</td><td>${r.fullBox}</td><td>${r.looseBox}</td>
-      <td>${r.totalQty}</td><td>${r.countedBy}</td><td>${fmtDate(r.timestamp)}</td>
-      <td>${isAdmin ? `<button class="remove-row" data-key="${r._key}">✕</button>` : ""}</td>
+      <td>${r.totalQty}</td><td>${escapeHtml(r.countedBy)}</td><td>${fmtDate(r.timestamp)}</td>
+      <td>${isAdmin ? `<button class="remove-row" data-key="${escapeHtml(r._key)}">✕</button>` : ""}</td>
     </tr>`).join("");
 
   if (isAdmin) {
