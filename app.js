@@ -31,6 +31,14 @@ function fmtDate(ts) {
   return new Date(ts).toLocaleString();
 }
 
+// Prevent XSS: user-typed Pallet/Location IDs are rendered back into
+// shared views (Verify, Dashboard) — must be escaped before insertion.
+function escapeHtml(str) {
+  return String(str ?? "").replace(/[&<>"']/g, (c) => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+  }[c]));
+}
+
 /* ---------------- Load SKU master (static JSON, free hosting) ---------------- */
 async function loadSkuMaster() {
   try {
@@ -97,8 +105,8 @@ skuSearch.addEventListener("input", () => {
   if (!matches.length) { skuResults.classList.add("hidden"); return; }
   skuResults.innerHTML = matches.map((s, i) =>
     `<div class="ac-item" data-idx="${i}">
-       <div class="ac-code">${s.code}</div>
-       <div class="ac-desc">${s.description}</div>
+       <div class="ac-code">${escapeHtml(s.code)}</div>
+       <div class="ac-desc">${escapeHtml(s.description)}</div>
      </div>`
   ).join("");
   skuResults.classList.remove("hidden");
@@ -185,8 +193,8 @@ function renderLines() {
   tbody.innerHTML = pendingLines.map((l, i) => `
     <tr>
       <td>${i + 1}</td>
-      <td class="mono">${l.skuCode}</td>
-      <td>${l.description}</td>
+      <td class="mono">${escapeHtml(l.skuCode)}</td>
+      <td>${escapeHtml(l.description)}</td>
       <td>${l.qtyPerBox}</td>
       <td>${l.fullBox}</td>
       <td>${l.looseBox}</td>
@@ -205,6 +213,9 @@ function renderLines() {
 /* ---------------- Submit ---------------- */
 $("submitBtn").addEventListener("click", async () => {
   if (!pendingLines.length) return showToast("Add at least one line first", true);
+  const btn = $("submitBtn");
+  btn.disabled = true;
+  btn.textContent = "Submitting…";
   const user = auth.currentUser;
   const updates = {};
   pendingLines.forEach((line) => {
@@ -233,6 +244,9 @@ $("submitBtn").addEventListener("click", async () => {
   } catch (e) {
     console.error(e);
     showToast("Submit failed — check your connection and try again.", true);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Submit";
   }
 });
 
@@ -259,10 +273,10 @@ $("verifyBtn").addEventListener("click", async () => {
   $("verifyEmpty").classList.toggle("hidden", rows.length > 0);
   document.querySelector("#verifyTable tbody").innerHTML = rows.map((r) => `
     <tr>
-      <td class="mono">${r.skuCode}</td><td>${r.description}</td>
-      <td class="mono">${r.palletId}</td><td class="mono">${r.locationId}</td>
+      <td class="mono">${escapeHtml(r.skuCode)}</td><td>${escapeHtml(r.description)}</td>
+      <td class="mono">${escapeHtml(r.palletId)}</td><td class="mono">${escapeHtml(r.locationId)}</td>
       <td>${r.qtyPerBox}</td><td>${r.fullBox}</td><td>${r.looseBox}</td>
-      <td>${r.totalQty}</td><td>${r.countedBy}</td><td>${fmtDate(r.timestamp)}</td>
+      <td>${r.totalQty}</td><td>${escapeHtml(r.countedBy)}</td><td>${fmtDate(r.timestamp)}</td>
     </tr>`).join("");
 });
 
