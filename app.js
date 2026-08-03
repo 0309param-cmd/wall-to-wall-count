@@ -1,6 +1,6 @@
 /* =========================================================
-   Wall-to-Wall Count — dashboard.js
-   Supervisor-only live view. Not loaded by the PDA app (index.html).
+   Wall-to-Wall Count — app.js
+   Vanilla JS, Firebase (free Spark plan). No build step needed.
    ========================================================= */
 
 firebase.initializeApp(firebaseConfig);
@@ -8,11 +8,13 @@ const auth = firebase.auth();
 const db = firebase.database();
 
 const COUNTS_PATH = "counts";
-const USER_EMAIL_DOMAIN = "@warehouse.local"; // must match app.js
+const USER_EMAIL_DOMAIN = "@warehouse.local"; // see README-SETUP.md
 
-let dashboardRows = [];
-let isAdmin = false;
+let skuMaster = [];      // loaded once from sku-master.json
+let pendingLines = [];   // lines queued for the current pallet, pre-submit
+let selectedSku = null;  // { code, description, qtyPerBox }
 
+/* ---------------- Utility ---------------- */
 function $(id) { return document.getElementById(id); }
 
 function showToast(msg, isError = false) {
@@ -29,10 +31,23 @@ function fmtDate(ts) {
   return new Date(ts).toLocaleString();
 }
 
+// Prevent XSS: user-typed Pallet/Location IDs are rendered back into
+// shared views (Verify, Dashboard) — must be escaped before insertion.
 function escapeHtml(str) {
   return String(str ?? "").replace(/[&<>"']/g, (c) => ({
     "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
   }[c]));
+}
+
+/* ---------------- Load SKU master (static JSON, free hosting) ---------------- */
+async function loadSkuMaster() {
+  try {
+    const res = await fetch("sku-master.json", { cache: "force-cache" });
+    skuMaster = await res.json();
+  } catch (e) {
+    console.error("Could not load sku-master.json", e);
+    showToast("Could not load SKU master list", true);
+  }
 }
 
 /* ---------------- Auth ---------------- */
@@ -59,96 +74,215 @@ auth.onAuthStateChanged(async (user) => {
     $("loginScreen").classList.add("hidden");
     $("appShell").classList.remove("hidden");
     $("userChip").textContent = user.email.replace(USER_EMAIL_DOMAIN, "");
-    const adminSnap = await db.ref("admins/" + user.uid).once("value");
-    isAdmin = adminSnap.val() === true;
-    attachDashboardListener();
+    await loadSkuMaster();
   } else {
     $("appShell").classList.add("hidden");
     $("loginScreen").classList.remove("hidden");
   }
 });
 
-/* ---------------- Live data ---------------- */
-const DASHBOARD_LIMIT = 3000;
+/* ---------------- Tabs ---------------- */
+document.querySelectorAll(".tab-btn").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".tab-btn").forEach((b) => b.classList.remove("active"));
+    document.querySelectorAll(".tab-panel").forEach((p) => p.classList.add("hidden"));
+    btn.classList.add("active");
+    $("tab-" + btn.dataset.tab).classList.remove("hidden");
+  });
+});
 
-function attachDashboardListener() {
-  db.ref(COUNTS_PATH)
-    .orderByChild("timestamp")
-    .limitToLast(DASHBOARD_LIMIT)
-    .on("value", (snap) => {
-      const rows = [];
-      snap.forEach((child) => { rows.push({ ...child.val(), _key: child.key }); });
-      dashboardRows = rows.reverse(); // newest first
-      renderDashboard();
-      if (dashboardRows.length >= DASHBOARD_LIMIT) {
-        showToast(`Showing latest ${DASHBOARD_LIMIT} records — older ones exist but aren't shown live. Use Export or filters to narrow down.`, true);
-      }
-    });
+/* ---------------- SKU search / autocomplete ---------------- */
+const skuSearch = $("skuSearch");
+const skuResults = $("skuResults");
+
+skuSearch.addEventListener("input", () => {
+  const q = skuSearch.value.trim().toLowerCase();
+  selectedSku = null;
+  if (!q) { skuResults.classList.add("hidden"); return; }
+  const matches = skuMaster
+    .filter((s) => s.code.toLowerCase().includes(q) || s.description.toLowerCase().includes(q))
+    .slice(0, 30);
+  if (!matches.length) { skuResults.classList.add("hidden"); return; }
+  skuResults.innerHTML = matches.map((s, i) =>
+    `<div class="ac-item" data-idx="${i}">
+       <div class="ac-code">${escapeHtml(s.code)}</div>
+       <div class="ac-desc">${escapeHtml(s.description)}</div>
+     </div>`
+  ).join("");
+  skuResults.classList.remove("hidden");
+  skuResults.querySelectorAll(".ac-item").forEach((el, i) => {
+    el.addEventListener("click", () => selectSku(matches[i]));
+  });
+});
+
+function selectSku(sku) {
+  selectedSku = sku;
+  skuSearch.value = sku.code;
+  $("skuDescription").value = sku.description;
+  $("qtyPerBox").value = sku.qtyPerBox;
+  skuResults.classList.add("hidden");
+  recalcTotal();
 }
 
-function renderDashboard() {
-  const fPallet = $("fltPallet").value.trim().toLowerCase();
-  const fLocation = $("fltLocation").value.trim().toLowerCase();
-  const fSku = $("fltSku").value.trim().toLowerCase();
-  const fUser = $("fltUser").value.trim().toLowerCase();
+/* ---------------- Qty calculation ---------------- */
+function recalcTotal() {
+  const qtyPerBox = parseFloat($("qtyPerBox").value) || 0;
+  const fullBox = parseFloat($("fullBoxQty").value) || 0;
+  const loose = parseFloat($("looseBoxQty").value) || 0;
+  const total = qtyPerBox * fullBox + loose;
+  $("totalQty").textContent = total;
+  return total;
+}
+["qtyPerBox", "fullBoxQty", "looseBoxQty"].forEach((id) =>
+  $(id).addEventListener("input", recalcTotal)
+);
 
-  const filtered = dashboardRows.filter((r) =>
-    (!fPallet || (r.palletId || "").toLowerCase().includes(fPallet)) &&
-    (!fLocation || (r.locationId || "").toLowerCase().includes(fLocation)) &&
-    (!fSku || (r.skuCode || "").toLowerCase().includes(fSku)) &&
-    (!fUser || (r.countedBy || "").toLowerCase().includes(fUser))
-  );
+/* ---------------- Pallet ID validation ---------------- */
+const PALLET_PREFIX = "HE";
+function isValidPalletId(id) {
+  return id.trim().toUpperCase().startsWith(PALLET_PREFIX);
+}
+$("palletId").addEventListener("input", () => $("palletId").classList.remove("invalid"));
+$("palletId").addEventListener("blur", () => {
+  const val = $("palletId").value.trim();
+  if (val && !isValidPalletId(val)) {
+    $("palletId").classList.add("invalid");
+    showToast(`Pallet ID must start with "${PALLET_PREFIX}"`, true);
+  } else {
+    $("palletId").classList.remove("invalid");
+  }
+});
 
-  document.querySelector("#dashTable tbody").innerHTML = filtered.map((r) => `
+/* ---------------- Add line ---------------- */
+$("addLineBtn").addEventListener("click", () => {
+  const palletId = $("palletId").value.trim();
+  const locationId = $("locationId").value.trim();
+  if (!palletId) return showToast("Scan the Pallet ID first", true);
+  if (!isValidPalletId(palletId)) {
+    $("palletId").classList.add("invalid");
+    return showToast(`Pallet ID must start with "${PALLET_PREFIX}" — check the scan`, true);
+  }
+  if (!locationId) return showToast("Scan the Location first", true);
+  if (!selectedSku) return showToast("Select a SKU from the list", true);
+
+  const line = {
+    skuCode: selectedSku.code,
+    description: selectedSku.description,
+    palletId, locationId,
+    qtyPerBox: parseFloat($("qtyPerBox").value) || 0,
+    fullBox: parseFloat($("fullBoxQty").value) || 0,
+    looseBox: parseFloat($("looseBoxQty").value) || 0,
+    totalQty: recalcTotal(),
+  };
+  pendingLines.push(line);
+  renderLines();
+
+  // reset SKU + qty fields only, keep pallet/location for the next line
+  skuSearch.value = "";
+  $("skuDescription").value = "";
+  $("qtyPerBox").value = "";
+  $("fullBoxQty").value = "0";
+  $("looseBoxQty").value = "0";
+  selectedSku = null;
+  recalcTotal();
+  skuSearch.focus();
+});
+
+function renderLines() {
+  const tbody = document.querySelector("#linesTable tbody");
+  tbody.innerHTML = pendingLines.map((l, i) => `
+    <tr>
+      <td>${i + 1}</td>
+      <td class="mono">${escapeHtml(l.skuCode)}</td>
+      <td>${escapeHtml(l.description)}</td>
+      <td>${l.qtyPerBox}</td>
+      <td>${l.fullBox}</td>
+      <td>${l.looseBox}</td>
+      <td>${l.totalQty}</td>
+      <td><button class="remove-row" data-i="${i}">✕</button></td>
+    </tr>`).join("");
+  $("lineCount").textContent = pendingLines.length;
+  tbody.querySelectorAll(".remove-row").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      pendingLines.splice(parseInt(btn.dataset.i), 1);
+      renderLines();
+    });
+  });
+}
+
+/* ---------------- Submit ---------------- */
+$("submitBtn").addEventListener("click", async () => {
+  if (!pendingLines.length) return showToast("Add at least one line first", true);
+  const btn = $("submitBtn");
+  btn.disabled = true;
+  btn.textContent = "Submitting…";
+  const user = auth.currentUser;
+  const updates = {};
+  pendingLines.forEach((line) => {
+    const key = db.ref(COUNTS_PATH).push().key;
+    updates[`${COUNTS_PATH}/${key}`] = {
+      skuCode: line.skuCode,
+      description: line.description,
+      palletId: line.palletId,
+      locationId: line.locationId,
+      qtyPerBox: line.qtyPerBox,
+      fullBox: line.fullBox,
+      looseBox: line.looseBox,
+      totalQty: line.totalQty,
+      countedBy: user.email.replace(USER_EMAIL_DOMAIN, ""),
+      timestamp: firebase.database.ServerValue.TIMESTAMP,
+    };
+  });
+  try {
+    await db.ref().update(updates);
+    showToast(`✅ Submitted ${pendingLines.length} line(s) for Pallet ${pendingLines[0].palletId}`);
+    pendingLines = [];
+    renderLines();
+    $("palletId").value = "";
+    $("locationId").value = "";
+    $("palletId").focus();
+  } catch (e) {
+    console.error(e);
+    showToast("Submit failed — check your connection and try again.", true);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Submit";
+  }
+});
+
+/* ---------------- Verify tab ---------------- */
+$("verifyBtn").addEventListener("click", async () => {
+  const val = $("verifyInput").value.trim();
+  if (!val) return showToast("Scan a Pallet ID or Location ID", true);
+
+  const [byPallet, byLocation] = await Promise.all([
+    db.ref(COUNTS_PATH).orderByChild("palletId").equalTo(val).once("value"),
+    db.ref(COUNTS_PATH).orderByChild("locationId").equalTo(val).once("value"),
+  ]);
+  const seen = new Set();
+  const rows = [];
+  [byPallet, byLocation].forEach((snap) => {
+    snap.forEach((child) => {
+      if (seen.has(child.key)) return;
+      seen.add(child.key);
+      rows.push(child.val());
+    });
+  });
+
+  $("verifyCount").textContent = rows.length;
+  $("verifyEmpty").classList.toggle("hidden", rows.length > 0);
+  document.querySelector("#verifyTable tbody").innerHTML = rows.map((r) => `
     <tr>
       <td class="mono">${escapeHtml(r.skuCode)}</td><td>${escapeHtml(r.description)}</td>
       <td class="mono">${escapeHtml(r.palletId)}</td><td class="mono">${escapeHtml(r.locationId)}</td>
       <td>${r.qtyPerBox}</td><td>${r.fullBox}</td><td>${r.looseBox}</td>
       <td>${r.totalQty}</td><td>${escapeHtml(r.countedBy)}</td><td>${fmtDate(r.timestamp)}</td>
-      <td>${isAdmin ? `<button class="remove-row" data-key="${escapeHtml(r._key)}">✕</button>` : ""}</td>
     </tr>`).join("");
-
-  if (isAdmin) {
-    document.querySelectorAll("#dashTable .remove-row").forEach((btn) => {
-      btn.addEventListener("click", () => deleteRow(btn.dataset.key));
-    });
-  }
-}
-
-async function deleteRow(key) {
-  if (!confirm("Delete this record permanently? This cannot be undone.")) return;
-  try {
-    await db.ref(COUNTS_PATH + "/" + key).remove();
-    showToast("Record deleted");
-  } catch (e) {
-    console.error(e);
-    showToast("Delete failed — admin access required", true);
-  }
-}
-["fltPallet", "fltLocation", "fltSku", "fltUser"].forEach((id) =>
-  $(id).addEventListener("input", renderDashboard)
-);
-
-/* ---------------- Export to Excel ---------------- */
-$("exportBtn").addEventListener("click", () => {
-  const rows = Array.from(document.querySelectorAll("#dashTable tbody tr")).map((tr) => {
-    const cells = tr.querySelectorAll("td");
-    return {
-      "SKU Code": cells[0].textContent,
-      "Description": cells[1].textContent,
-      "Pallet ID": cells[2].textContent,
-      "Location ID": cells[3].textContent,
-      "Qty/Box": cells[4].textContent,
-      "Full Box": cells[5].textContent,
-      "Loose Box": cells[6].textContent,
-      "Total Qty": cells[7].textContent,
-      "Counted By": cells[8].textContent,
-      "Date": cells[9].textContent,
-    };
-  });
-  if (!rows.length) return showToast("Nothing to export", true);
-  const ws = XLSX.utils.json_to_sheet(rows);
-  const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, "Count Data");
-  XLSX.writeFile(wb, `wall-to-wall-count-${new Date().toISOString().slice(0, 10)}.xlsx`);
 });
+
+/* ---------------- Service worker (offline app shell) ---------------- */
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("sw.js").catch((e) => console.warn("SW failed:", e));
+  });
+}
