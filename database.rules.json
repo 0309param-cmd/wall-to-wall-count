@@ -8,7 +8,18 @@
       ".read": "auth != null",
       ".indexOn": ["palletId", "locationId", "timestamp"],
       "$countId": {
-        ".write": "auth != null && (!data.exists() || root.child('admins').child(auth.uid).val() === true)"
+        ".write": "auth != null && (!data.exists() || root.child('admins').child(auth.uid).val() === true)",
+        ".validate": "newData.hasChildren(['skuCode','description','palletId','locationId','qtyPerBox','fullBox','looseBox','totalQty','countedBy','timestamp'])",
+        "skuCode": { ".validate": "newData.isString() && newData.val().length < 100" },
+        "description": { ".validate": "newData.isString() && newData.val().length < 300" },
+        "palletId": { ".validate": "newData.isString() && newData.val().length < 100" },
+        "locationId": { ".validate": "newData.isString() && newData.val().length < 100" },
+        "countedBy": { ".validate": "newData.isString() && newData.val().length < 100" },
+        "qtyPerBox": { ".validate": "newData.isNumber()" },
+        "fullBox": { ".validate": "newData.isNumber()" },
+        "looseBox": { ".validate": "newData.isNumber()" },
+        "totalQty": { ".validate": "newData.isNumber()" },
+        "timestamp": { ".validate": "newData.isNumber()" }
       }
     },
     "$other": {
