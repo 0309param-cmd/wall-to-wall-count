@@ -1,4 +1,4 @@
-const CACHE_NAME = "w2w-count-v1";
+const CACHE_NAME = "w2w-count-v2"; // bumped: forces old stale caches to clear on this deploy
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -25,14 +25,24 @@ self.addEventListener("activate", (event) => {
   self.clients.claim();
 });
 
-// App-shell files: cache first (fast + offline). Firestore's own SDK
-// handles offline queueing for the actual count data.
+// Network-first, cache as offline fallback only.
+// Previously this was "cache first," which meant once a file (like
+// sku-master.json) was cached on first use, updates to it on the server
+// were never picked up — the app kept serving whatever was cached on day one.
+// Network-first always tries to get the latest version first, and only
+// falls back to the cached copy if there's no network at all.
 self.addEventListener("fetch", (event) => {
   const url = new URL(event.request.url);
   const isAppShellFile = APP_SHELL.some((f) => url.pathname.endsWith(f.replace("./", "")));
-  if (!isAppShellFile) return; // let Firebase/network requests pass through normally
+  if (!isAppShellFile) return; // let Firebase/other requests pass through normally
 
   event.respondWith(
-    caches.match(event.request).then((cached) => cached || fetch(event.request))
+    fetch(event.request)
+      .then((response) => {
+        const responseCopy = response.clone();
+        caches.open(CACHE_NAME).then((cache) => cache.put(event.request, responseCopy));
+        return response;
+      })
+      .catch(() => caches.match(event.request))
   );
 });

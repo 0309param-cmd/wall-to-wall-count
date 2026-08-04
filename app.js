@@ -42,7 +42,7 @@ function escapeHtml(str) {
 /* ---------------- Load SKU master (static JSON, free hosting) ---------------- */
 async function loadSkuMaster() {
   try {
-    const res = await fetch("sku-master.json", { cache: "force-cache" });
+    const res = await fetch("sku-master.json", { cache: "no-cache" });
     skuMaster = await res.json();
   } catch (e) {
     console.error("Could not load sku-master.json", e);
